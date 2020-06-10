@@ -1,0 +1,107 @@
+工程描述：
+	实现简单的boot用来启动内核
+	
+开发板（s5pv210）从上电开始运行过程：
+	1.运行固化在iROM中的厂商程序（BL0）这段代码会关看门狗，初始化时钟，初始化nandflash等
+	2.固化程序根据启动方式不同，会去相应的地点拷贝BL1到iRAM，然后跳转到iRAM中执行bl1，例如nand启动，BL0会拷贝nand上的BL1到iRAM
+	3.运行BL1，BL1会拷贝整个uboot到内存，以及拷贝整个内核到内存，然后跳到内存去运行程序
+	4.BL2会做一些基本的设置然后跳到内核地址去启动内核(C语言一般会(*theKernel)(int zero, int arch, uint params);声明指针函数)
+
+	
+boot流程：
+
+	1.初始化内存
+	2.初始化串口
+	3.nandflash读写函数接口实现
+	问:什么是nandflash
+	答:nandflash是一种闪存，非易失性 容量大，价格便宜 相当于我们电脑中的硬盘
+	
+	问:nandflash芯片的引脚
+	答:阅读nandflash芯片手册可知其芯片引脚及其含义
+		I/O0~I/O7:输入输出引脚，用做于输入命令，地址，在读操作下输出数据
+		CLE: 输入控制引脚,控制输入到控制寄存器的命令
+		ALE: 输入控制引脚,控制输入到地址寄存器的地址
+		RE： 读使能引脚，低电平有效
+		WE： 写使能引脚，低电平有效
+		WP： 写保护引脚
+		R/B: 状态引脚，当读出0时忙，读出1时准备就绪
+		
+	问:初始化nandflash
+	答:一般bl0中会对nandflash初始化，所以我们只需要写读写的接口函数接口就行，一般写的函数都不用写
+	
+	问:nandflash读写的可靠性
+	答:nandflash有校验机制但一般启动代码中没有强制去写，因为内核中会去做
+	
+	5.拷贝bootloader到内存
+	6.跳转到内存执行
+	7.拷贝内核到内存
+	8.设置参数：因为bootloader和内核之间不能同时运行，所以两者之间无法通信传输数据
+	问：如何传输数据呢
+	答：内核和bootloader之间约定好，把数据存放在某个地址，当bootloader启动内核时把这个
+		地址传给内核，内核到这个地址去取数据
+	问：内核如何知道这些数据的具体含义
+	答：这些参数具有一定的格式,内核希望以标记列表的形式去存放这些数据具体格式如下(linux/include/asm/setup.h)
+		struct tag_header {
+			__u32 size;//参数大小
+			__u32 tag;//参数类型
+		};
+		struct tag {//参数具体内容
+			struct tag_header hdr;
+			union {
+				struct tag_core		core;
+				struct tag_mem32	mem;
+				struct tag_videotext	videotext;
+				struct tag_ramdisk	ramdisk;
+				struct tag_initrd	initrd;
+				struct tag_serialnr	serialnr;
+				struct tag_revision	revision;
+				struct tag_videolfb	videolfb;
+				struct tag_cmdline	cmdline;
+
+				/*
+				 * Acorn specific
+				 */
+				struct tag_acorn	acorn;
+
+				/*
+				 * DC21285 specific
+				 */
+				struct tag_memclk	memclk;
+			} u;
+		};
+	问：bootloader如何设置这个标记列表
+	答：标记列表以ATAG_CORE开始(内核中注释/* The list must start with an ATAG_CORE node */)
+		假设约定地址为0xd0030000,则标记列表可以如下定义
+		struct tag *params = (struct tag *)0xd0030000;
+		
+		params->hdr.tag = ATAG_CORE; //标记列表以ATAG_CORE开始
+		params->hdr.size = tag_size (tag_core);//字节数除以4也就是4字节对齐
+
+		params->u.core.flags = 0;
+		params->u.core.pagesize = 0;
+		params->u.core.rootdev = 0;
+
+		params = tag_next (params);//以此来标记当前参数的尾部
+		
+		params->hdr.tag = ATAG_NONE;//标记结束
+		params->hdr.size = 0;
+	问：bootloader需要设置的标记列表的内容有哪些
+	答：最基本的有：ATAG_MEM 标记当前机器的磁盘地址及大小 
+		ATAG_CMDLINE 标记启动命令"root=/dev/mtdblock4 rootfstype=yaffs2 init=/linuxrc console=ttySAC0,115200";
+	9.启动内核
+		假设内核在内存的0x30000000 约定标记列表地址为0xd0030000
+		#define MACH_TYPE_SMDKV210             2456 //机器ID theKernel第二个参数
+		void (*theKernel)(int,int,uint);
+		theKernel = (void (*)(int, int, uint))0x30000000;
+		theKernel(0, MACH_TYPE_SMDKV210, 0xd0030000);
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

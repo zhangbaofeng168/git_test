@@ -1,0 +1,100 @@
+#ifndef __S5PV210_H__
+#define __S5PV210_H__
+
+
+#include "hardware.h"
+
+/*
+ *LED GPH0_0 ~ GPH0_3
+ */
+#define GPH0CON 			__REG(0xE0200C00)
+#define GPH0DAT 			__REG(0xE0200C04)
+#define GPH0PUD 			__REG(0xE0200C08)
+#define GPH0DRV 			__REG(0xE0200C0C)
+
+/*
+ *UART0
+ */
+#define ULCON0              __REG(0xE2900000)
+#define UCON0               __REG(0xE2900004)
+#define UTRSTAT0   		    __REG(0xE2900010)
+#define UTXH0   		    __REG(0xE2900020)
+#define URXH0   		    __REG(0xE2900024)
+#define UBRDIV0    		    __REG(0xE2900028)
+#define UDIVSLOT0   	    __REG(0xE290002C)
+
+/*
+ *MEMORY CONTROLLER
+ */
+#define PHYCONTROL00_REG     	__REG(0xF0000018)
+#define PHYCONTROL01_REG     	__REG(0xF000001C)
+#define PHYSTATUS0_REG       	__REG(0xF0000040)
+
+#define PHYCONTROL10_REG    	__REG(0xF1400018)
+#define PHYCONTROL11_REG    	__REG(0xF140001C)
+#define PHYSTATUS1_REG      	__REG(0xF1400040)
+
+#define DMC0_CONCONTROL			__REG(0xF0000000)
+#define DMC0_MEMCONTROL			__REG(0xF0000004)
+#define DMC0_MEMCONFIG0			__REG(0xF0000008)
+#define DMC0_MEMCONFIG1			__REG(0xF000000C)
+#define DMC0_DIRECTCMD			__REG(0xF0000010)
+#define DMC0_PRECHCONFIG		__REG(0xF0000014)
+#define DMC0_PWRDNCONFIG		__REG(0xF0000028)
+#define DMC0_TIMINGAREF			__REG(0xF0000030)
+#define DMC0_TIMINGROW			__REG(0xF0000034)
+#define DMC0_TIMINGDATA			__REG(0xF0000038)
+#define DMC0_TIMINGPOWER		__REG(0xF000003C)
+
+#define DMC1_CONCONTROL			__REG(0xF1400000)
+#define DMC1_MEMCONTROL			__REG(0xF1400004)
+#define DMC1_MEMCONFIG0			__REG(0xF1400008)
+#define DMC1_MEMCONFIG1			__REG(0xF140000C)
+#define DMC1_DIRECTCMD			__REG(0xF1400010)
+#define DMC1_PRECHCONFIG		__REG(0xF1400014)
+#define DMC1_PWRDNCONFIG		__REG(0xF1400028)
+#define DMC1_TIMINGAREF			__REG(0xF1400030)
+#define DMC1_TIMINGROW			__REG(0xF1400034)
+#define DMC1_TIMINGDATA			__REG(0xF1400038)
+#define DMC1_TIMINGPOWER		__REG(0xF140003C)
+
+/*
+ * Standard NAND flash commands
+ */
+#define NAND_CMD_READ0			0
+#define NAND_CMD_READ1			1
+#define NAND_CMD_RNDOUT			5
+#define NAND_CMD_PAGEPROG		0x10
+#define NAND_CMD_READOOB		0x50
+#define NAND_CMD_ERASE1			0x60
+#define NAND_CMD_STATUS			0x70
+#define NAND_CMD_STATUS_MULTI	0x71
+#define NAND_CMD_SEQIN			0x80
+#define NAND_CMD_RNDIN			0x85
+#define NAND_CMD_READID			0x90
+#define NAND_CMD_ERASE2			0xd0
+#define NAND_CMD_RESET			0xff
+
+/* Extended commands for large page devices */
+#define NAND_CMD_READSTART		0x30
+#define NAND_CMD_RNDOUTSTART	0xE0
+#define NAND_CMD_CACHEDPROG		0x15
+
+/*
+ *NAND
+ */
+#define NFCONF_REG				__REG(0xB0E00000)
+#define NFCONT_REG				__REG(0xB0E00004)
+#define NFCMD_REG				__REG(0xB0E00008)
+#define NFADDR_REG           	__REG(0xB0E0000C)
+#define NFDATA_REG          	__REG(0xB0E00010)
+#define NFDATA8_REG          	__REGb(0xB0E00010)
+#define NFSTAT_REG           	__REG(0xB0E00028)
+
+#define NAND_DISABLE_CE()	(NFCONT_REG |= (1 << 1))
+#define NAND_ENABLE_CE()	(NFCONT_REG &= ~(1 << 1))
+#define NF_TRANSRnB()		do { while(!(NFSTAT_REG & (1 << 0))); } while(0)
+
+#define NAND_CONTROL_ENABLE()	(NFCONT_REG |= (1 << 0))
+
+#endif /*__S5PV210_H__*/

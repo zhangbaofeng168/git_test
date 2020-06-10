@@ -1,0 +1,91 @@
+
+boot.elf:     file format elf32-littlearm
+
+Disassembly of section .text:
+
+33e00000 <_start>:
+33e00000:	e59f0014 	ldr	r0, [pc, #20]	; 33e0001c <loop+0x4>
+33e00004:	e59f1014 	ldr	r1, [pc, #20]	; 33e00020 <loop+0x8>
+33e00008:	e5801000 	str	r1, [r0]
+33e0000c:	e59f0010 	ldr	r0, [pc, #16]	; 33e00024 <loop+0xc>
+33e00010:	e3a0100f 	mov	r1, #15	; 0xf
+33e00014:	e5801000 	str	r1, [r0]
+
+33e00018 <loop>:
+33e00018:	eafffffe 	b	33e00018 <loop>
+33e0001c:	e0200c00 	.word	0xe0200c00
+33e00020:	00001111 	.word	0x00001111
+33e00024:	e0200c04 	.word	0xe0200c04
+Disassembly of section .debug_aranges:
+
+00000000 <.debug_aranges>:
+   0:	0000001c 	andeq	r0, r0, ip, lsl r0
+   4:	00000002 	andeq	r0, r0, r2
+   8:	00040000 	andeq	r0, r4, r0
+   c:	00000000 	andeq	r0, r0, r0
+  10:	33e00000 	mvncc	r0, #0	; 0x0
+  14:	00000028 	andeq	r0, r0, r8, lsr #32
+	...
+Disassembly of section .debug_info:
+
+00000000 <.debug_info>:
+   0:	0000005c 	andeq	r0, r0, ip, asr r0
+   4:	00000002 	andeq	r0, r0, r2
+   8:	01040000 	tsteq	r4, r0
+   c:	00000000 	andeq	r0, r0, r0
+  10:	33e00000 	mvncc	r0, #0	; 0x0
+  14:	33e00028 	mvncc	r0, #40	; 0x28
+  18:	72617473 	rsbvc	r7, r1, #1929379840	; 0x73000000
+  1c:	00532e74 	subseq	r2, r3, r4, ror lr
+  20:	6d6f682f 	stclvs	8, cr6, [pc, #-188]!
+  24:	61622f65 	cmnvs	r2, r5, ror #30
+  28:	6e65666f 	cdpvs	6, 6, cr6, cr5, cr15, {3}
+  2c:	6f772f67 	svcvs	0x00772f67
+  30:	6d2f6b72 	vstmdbvs	pc!, {d6-<overflow reg d62>}
+  34:	6f6f6279 	svcvs	0x006f6279
+  38:	616f6c74 	smcvs	63172
+  3c:	2f726564 	svccs	0x00726564
+  40:	746f6f62 	strbtvc	r6, [pc], #3938	; 48 <.word-0x7ffb8>
+  44:	64616f6c 	strbtvs	r6, [r1], #-3948
+  48:	312f7265 	teqcc	pc, r5, ror #4
+  4c:	47006874 	smlsdxmi	r0, r4, r8, r6
+  50:	4120554e 	teqmi	r0, lr, asr #10
+  54:	2e322053 	mrccs	0, 1, r2, cr2, cr3, {2}
+  58:	352e3831 	strcc	r3, [lr, #-2097]!
+  5c:	80010030 	andhi	r0, r1, r0, lsr r0
+Disassembly of section .debug_abbrev:
+
+00000000 <.debug_abbrev>:
+   0:	10001101 	andne	r1, r0, r1, lsl #2
+   4:	12011106 	andne	r1, r1, #-2147483647	; 0x80000001
+   8:	1b080301 	blne	200c14 <.word+0x180c14>
+   c:	13082508 	movwne	r2, #34056	; 0x8508
+  10:	00000005 	andeq	r0, r0, r5
+Disassembly of section .debug_line:
+
+00000000 <.debug_line>:
+   0:	00000037 	andeq	r0, r0, r7, lsr r0
+   4:	001e0002 	andseq	r0, lr, r2
+   8:	01020000 	tsteq	r2, r0
+   c:	000d0efb 	strdeq	r0, [sp], -fp
+  10:	01010101 	tsteq	r1, r1, lsl #2
+  14:	01000000 	tsteq	r0, r0
+  18:	00010000 	andeq	r0, r1, r0
+  1c:	72617473 	rsbvc	r7, r1, #1929379840	; 0x73000000
+  20:	00532e74 	subseq	r2, r3, r4, ror lr
+  24:	00000000 	andeq	r0, r0, r0
+  28:	00020500 	andeq	r0, r2, r0, lsl #10
+  2c:	1833e000 	ldmdane	r3!, {sp, lr, pc}
+  30:	2f302f2f 	svccs	0x00302f2f
+  34:	0802312f 	stmdaeq	r2, {r0, r1, r2, r3, r5, r8, ip, sp}
+  38:	Address 0x00000038 is out of bounds.
+
+Disassembly of section .ARM.attributes:
+
+00000000 <.ARM.attributes>:
+   0:	00001741 	andeq	r1, r0, r1, asr #14
+   4:	61656100 	cmnvs	r5, r0, lsl #2
+   8:	01006962 	tsteq	r0, r2, ror #18
+   c:	0000000d 	andeq	r0, r0, sp
+  10:	00543405 	subseq	r3, r4, r5, lsl #8
+  14:	01080206 	tsteq	r8, r6, lsl #4

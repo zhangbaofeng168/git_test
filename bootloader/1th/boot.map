@@ -1,0 +1,13 @@
+00080000 a .word
+33e00000 T _start
+33e00018 t loop
+33e00028 A __exidx_end
+33e00028 A __exidx_start
+33e08028 A __bss_end__
+33e08028 A __bss_start
+33e08028 A __bss_start__
+33e08028 T __data_start
+33e08028 A __end__
+33e08028 A _bss_end__
+33e08028 A _edata
+33e08028 A _end
